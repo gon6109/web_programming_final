@@ -1,0 +1,20 @@
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a href="." class="navbar-item"><strong>進捗ありますか？</strong></a>
+    </div>
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            <a href="menu.php" class="navbar-item">メニュー</a>
+        </div>
+        <div class="navbar-end">
+            <% if @session.nil? || @session.include?('id') %>
+                <a class="navbar-item" href="login.rb">ログイン</a>
+            <% else %>
+                <div class="navbar-item">
+                    <%= User.find(@session['id']).name %>
+                </div>
+                <a href="update_user_form.php" class="navbar-item">ユーザ設定</a>
+            <% end %>
+        </div>
+    </div>
+</nav>

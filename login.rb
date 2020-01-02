@@ -5,8 +5,8 @@ require 'erb'
 
 begin
     cgi = CGI.new
-
-    body = ERB.new(File.read("view/index.rhtml"))
+    
+    body = ERB.new(File.read("view/login.rhtml"))
     @body = body.result(binding)
 
     layout = ERB.new(File.read("view/layout.rhtml"))
