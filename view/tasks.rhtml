@@ -18,7 +18,7 @@
                     <form action="tasks.rb" method="GET" class="content">
                         <div class="field">
                             <label class="label">Words</label>
-                            <div class="control"><input type="text" placeholder="自由ワード検索 スペースでand検索" name="word" class="input"></div>
+                            <div class="control"><input type="text" placeholder="自由ワード検索 スペースでand検索" name="word" class="input" value='<%= @cgi["word"] %>'></div>
                         </div>
                         <input type="hidden" name="id" value="<%= @current_project.id %>">
                         <input type="hidden" name="search">

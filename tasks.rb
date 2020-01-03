@@ -10,36 +10,36 @@ require_relative 'model/project'
 require_relative 'model/task'
 
 begin
-    cgi = CGI.new
-    @session = CGI::Session.new(cgi)
+    @cgi = CGI.new
+    @session = CGI::Session.new(@cgi)
 
     if @session['id'].nil?
-        print cgi.header({'status' => '302 Found', 'Location' => "login.rb" })
+        print @cgi.header({'status' => '302 Found', 'Location' => "login.rb" })
         @session.close
         exit
     end
 
     @current_user = User.find(@session['id'].to_i)
     
-    @current_project = Project.find_by(id: cgi['id'].to_i)
+    @current_project = Project.find_by(id: @cgi['id'].to_i)
     if @current_project.nil?
-        print cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
+        print @cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
         @session.close
         exit
     end
 
     if @current_user != @current_project.user
-        print cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
+        print @cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
         @session.close
         exit
     end
 
-    @tasks = Task.where(project: @current_project)
+    @tasks = Task.joins(:user).where(project: @current_project)
 
-    if cgi.params.include?("search")
-        words = cgi["search"].split(/\s*/)
+    if @cgi.params.include?("search")
+        words = @cgi.params["word"]
         words.each do |word|
-            @tasks = @tasks.where("title like %?% or detail like %?% or user.name like %?%", word, word, word)
+            @tasks = @tasks.where("title like ? or detail like ? or users.name like ?", '%' + word + '%', '%' + word + '%', '%' + word + '%')
         end
     end
 
@@ -49,12 +49,12 @@ begin
     @body = body.result(binding)
 
     layout = ERB.new(File.read("view/layout.rhtml"))
-    print cgi.header("text/html; charset=utf-8")
+    print @cgi.header("text/html; charset=utf-8")
     print layout.result(binding)
     @session.close
 
 rescue => e
-    print cgi.header("text/html;charset=utf-8")
+    print @cgi.header("text/html;charset=utf-8")
     print <<EOF
 <html>
     <head>
