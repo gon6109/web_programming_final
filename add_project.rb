@@ -8,13 +8,13 @@ require 'cgi/session'
 require_relative 'model/user'
 require_relative 'model/project'
 
-def print_erb(cgi)
+def print_add_project_form(cgi, error=nil)
     if !error.nil?
         @error = error
     end 
     header = ERB.new(File.read("view/header.rhtml"))
     @header = header.result(binding)
-    body = ERB.new(File.read("view/register_user.rhtml"))
+    body = ERB.new(File.read("view/add_project.rhtml"))
     @body = body.result(binding)
 
     layout = ERB.new(File.read("view/layout.rhtml"))
@@ -34,16 +34,31 @@ begin
 
     @current_user = User.find(@session['id'].to_i)
 
-    @projects = Project.where(user: @current_user)
+    if cgi.params.include?("add")
 
-    header = ERB.new(File.read("view/header.rhtml"))
-    @header = header.result(binding)
-    body = ERB.new(File.read("view/projects.rhtml"))
-    @body = body.result(binding)
+        if cgi["name"] == ""
+            print_add_project_form(cgi, "プロジェクト名を入力してください")
+            @session.close
+            exit
+        end
 
-    layout = ERB.new(File.read("view/layout.rhtml"))
-    print cgi.header("text/html; charset=utf-8")
-    print layout.result(binding)
+        project = Project.new
+        project.name = cgi["name"]
+        project.user = @current_user
+        project.detail = cgi["detail"]
+        
+        if !project.save
+            print_add_project_form(cgi, "データベースに保存できませんでした")
+            @session.close
+            exit
+        end
+
+        print cgi.header({'status' => '302 Found', 'Location' => "tasks.rb?id=" + project.id.to_s })
+        @session.close
+        exit
+    end
+
+    print_add_project_form(cgi)
     @session.close
 
 rescue => e

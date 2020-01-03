@@ -1,0 +1,31 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <div class="box">
+                    <h1 class="title is-3">プロジェクト追加</h1>
+                    <form class="content" action="add_project.rb" method="POST">
+                        <div class="field">
+                            <label class="label">プロジェクト名</label>
+                            <div class="control">
+                                <input class="input" type="text" name="name">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">詳細</label>
+                            <div class="control">
+                                <textarea class="textarea" name="detail"></textarea>
+                            </div>
+                        </div>
+                        <input type="hidden" name="add">
+                        <div class="field">
+                            <div class="control">
+                                <input class="button is-link" type="submit" value="追加">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

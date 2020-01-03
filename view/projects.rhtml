@@ -27,7 +27,7 @@
                             <% @projects.each do |project| %>
                                 <tr>
                                     <th><%= project.id %></th>
-                                    <td><a href="tasks?id=<%= project.id %>%"><%= project.name %></a></td>
+                                    <td><a href="tasks.rb?id=<%= project.id %>"><%= project.name %></a></td>
                                     <td><%= project.user.name %></td>
                                 </tr>
                             <% end %>
