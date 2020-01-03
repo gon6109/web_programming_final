@@ -7,6 +7,7 @@ require 'cgi/session'
 
 require_relative 'model/user'
 require_relative 'model/project'
+require_relative 'model/task'
 
 begin
     cgi = CGI.new
@@ -20,11 +21,18 @@ begin
 
     @current_user = User.find(@session['id'].to_i)
 
-    @projects = Project.where(user: @current_user)
+    @current_project = Project.find_by(id: cgi['id'].to_i)
+    if @current_project.nil?
+        print cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
+        @session.close
+        exit
+    end
+
+    @tasks = Task.where(project: @current_project)
 
     header = ERB.new(File.read("view/header.rhtml"))
     @header = header.result(binding)
-    body = ERB.new(File.read("view/projects.rhtml"))
+    body = ERB.new(File.read("view/tasks.rhtml"))
     @body = body.result(binding)
 
     layout = ERB.new(File.read("view/layout.rhtml"))

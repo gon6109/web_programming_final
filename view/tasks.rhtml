@@ -1,0 +1,53 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <div class="box">
+                    <div class="level">
+                        <div class="level-left">
+                            <h1 class="title is-3">タスク</h1>
+                        </div>
+                        <div class="level-right">
+                            <a href="add_task.rb">
+                                <span class="icon is-large has-text-success">
+                                    <i class="fas fa-plus-circle fa-3x"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <form action="task.rb" method="GET" class="content">
+                        <div class="field">
+                            <label class="label">Words</label>
+                            <div class="control"><input type="text" placeholder="自由ワード検索 スペースでand検索" name="word" class="input"></div>
+                        </div>
+                        <div class="field">
+                            <div class="control"><button class="button is-primary">検索</button></div>
+                        </div>
+                    </form>
+                    <div class="content"><table id="task" class="table is-fullwidth"><form>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>タスク名</th>
+                                <th>締め切り</th>
+                                <th>担当者</th>
+                                <th>更新日</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% @tasks.each do |task| %>
+                                <tr>
+                                    <th><%= task.id %></th>
+                                    <td><a href="task_detail.rb?id=<%= task.id %>"><%= task.title %></a></td>
+                                    <td><%= task.deadline %></td>
+                                    <td><%= task.user.name %></td>
+                                    <td><%= task.update_at %></td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+                    </form></table></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
