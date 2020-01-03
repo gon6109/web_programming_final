@@ -23,29 +23,35 @@ end
 
 begin
     cgi = CGI.new
+    @session = CGI::Session.new(cgi)
+    @session.delete
+    @session = CGI::Session.new(cgi)
 
     if cgi.params.include?("login")
         user = User.find_by(mail_address: cgi["mail_address"])
         
         if user.nil?
             print_login_form(cgi, "ユーザ名が正しくありません")
+            @session.close
             exit
         end
 
         password = BCrypt::Password.new(user.hashed_password)
         if password != cgi["password"]
             print_login_form(cgi, "パスワードが正しくありません")
+            @session.close
             exit
         end
 
-        @session = CGI::Session.new(cgi)
         @session['id'] = user.id
 
         print cgi.header({'status' => '302 Found', 'Location' => "menu.rb" })
+        @session.close
         exit
     end
 
     print_login_form(cgi)
+    @session.close
 
 rescue => e
     print cgi.header("text/html;charset=utf-8")

@@ -23,26 +23,33 @@ end
 
 begin
     cgi = CGI.new
+    @session = CGI::Session.new(cgi)
+    @session.delete
+    @session = CGI::Session.new(cgi)
 
     if cgi.params.include?("register")
         mailRegex = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
         if !cgi["mail_address"].match? mailRegex
             print_register_form(cgi, "メールアドレスが正しくありません")
+            @session.close
             exit
         end
 
         if User.where(mail_address: cgi["mail_address"]).exists?
             print_register_form(cgi, "すでに登録されています")
+            @session.close
             exit
         end
 
         if cgi["name"] == ""
             print_register_form(cgi, "名前を入力してください")
+            @session.close
             exit
         end
 
         if cgi["password"] == "" || cgi["password"] != cgi["password_confirmation"]
             print_register_form(cgi, "パスワードが正しくありません")
+            @session.close
             exit
         end
 
@@ -53,17 +60,19 @@ begin
         
         if !user.save
             print_register_form(cgi, "データベースに保存できませんでした")
+            @session.close
             exit
         end
 
-        @session = CGI::Session.new(cgi)
         @session['id'] = user.id
 
         print cgi.header({'status' => '302 Found', 'Location' => "menu.rb" })
+        @session.close
         exit
     end
 
     print_register_form(cgi)
+    @session.close
 
 rescue => e
     print cgi.header("text/html;charset=utf-8")

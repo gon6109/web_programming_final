@@ -7,7 +7,7 @@
             <a href="menu.php" class="navbar-item">メニュー</a>
         </div>
         <div class="navbar-end">
-            <% if @session.nil? || @session.include?('id') %>
+            <% if @session.nil? || @session['id'].nil? %>
                 <a class="navbar-item" href="login.rb">ログイン</a>
             <% else %>
                 <div class="navbar-item">
