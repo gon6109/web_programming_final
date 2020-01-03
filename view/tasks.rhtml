@@ -8,18 +8,20 @@
                             <h1 class="title is-3">タスク</h1>
                         </div>
                         <div class="level-right">
-                            <a href="add_task.rb">
+                            <a href="add_task.rb?id=<%= @current_project.id %>">
                                 <span class="icon is-large has-text-success">
                                     <i class="fas fa-plus-circle fa-3x"></i>
                                 </span>
                             </a>
                         </div>
                     </div>
-                    <form action="task.rb" method="GET" class="content">
+                    <form action="tasks.rb" method="GET" class="content">
                         <div class="field">
                             <label class="label">Words</label>
                             <div class="control"><input type="text" placeholder="自由ワード検索 スペースでand検索" name="word" class="input"></div>
                         </div>
+                        <input type="hidden" name="id" value="<%= @current_project.id %>">
+                        <input type="hidden" name="search">
                         <div class="field">
                             <div class="control"><button class="button is-primary">検索</button></div>
                         </div>
@@ -40,8 +42,8 @@
                                     <th><%= task.id %></th>
                                     <td><a href="task_detail.rb?id=<%= task.id %>"><%= task.title %></a></td>
                                     <td><%= task.deadline %></td>
-                                    <td><%= task.user.name %></td>
-                                    <td><%= task.update_at %></td>
+                                    <td><%= task.user&.name %></td>
+                                    <td><%= task.update_date %></td>
                                 </tr>
                             <% end %>
                         </tbody>

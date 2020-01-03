@@ -20,7 +20,7 @@ begin
     end
 
     @current_user = User.find(@session['id'].to_i)
-
+    
     @current_project = Project.find_by(id: cgi['id'].to_i)
     if @current_project.nil?
         print cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
@@ -28,7 +28,20 @@ begin
         exit
     end
 
+    if @current_user != @current_project.user
+        print cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
+        @session.close
+        exit
+    end
+
     @tasks = Task.where(project: @current_project)
+
+    if cgi.params.include?("search")
+        words = cgi["search"].split(/\s*/)
+        words.each do |word|
+            @tasks = @tasks.where("title like %?% or detail like %?% or user.name like %?%", word, word, word)
+        end
+    end
 
     header = ERB.new(File.read("view/header.rhtml"))
     @header = header.result(binding)

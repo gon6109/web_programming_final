@@ -1,0 +1,55 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <div class="box">
+                    <% if @error.present? %>
+                        <div class="notification is-danger">
+                            <%= @error %>
+                        </div>
+                    <% end %>
+                    <h1 class="title is-3">タスク追加</h1>
+                    <form class="content" action="add_task.rb" method="POST">
+                        <div class="field">
+                            <label class="label">タイトル</label>
+                            <div class="control">
+                                <input class="input" type="text" name="title">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">締め切り</label>
+                            <div class="control">
+                                <input class="input" type="date" name="deadline">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">担当者</label>
+                            <div class="control">
+                                <div class="select"><select name="user_id">
+                                    <option value="0" selected></option>
+                                    <% @users.each do |user|%>
+                                        <option value="<%= user.id %>"><%= user.name%> </option>
+                                    <% end %>
+                                </select></div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">詳細</label>
+                            <div class="control">
+                                <textarea class="textarea" name="detail"></textarea>
+                            </div>
+                        </div>
+                        <input type="hidden" name="add">
+                        <input type="hidden" name="id" value="<%= @current_project.id %>">
+                        <div class="field">
+                            <div class="control">
+                                <input class="button is-link" type="submit" value="追加">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+        
