@@ -3,13 +3,16 @@
 require 'cgi'
 require 'erb'
 require 'bcrypt'
+require 'cgi/session'
 
 require_relative 'model/user'
 
 def print_login_form(cgi, error=nil)
     if !error.nil?
         @error = error
-    end 
+    end
+    header = ERB.new(File.read("view/header.rhtml"))
+    @header = header.result(binding)
     body = ERB.new(File.read("view/login.rhtml"))
     @body = body.result(binding)
 
@@ -29,7 +32,7 @@ begin
             exit
         end
 
-        password = BCrypt.new(user.hashed_password)
+        password = BCrypt::Password.new(user.hashed_password)
         if password != cgi["password"]
             print_login_form(cgi, "パスワードが正しくありません")
             exit
