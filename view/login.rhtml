@@ -3,22 +3,28 @@
         <div class="columns">
             <div class="column is-8 is-offset-2">
                 <div class="box">
+                    <% if @error.present? %>
+                        <div class="notification is-danger">
+                            <%= @error %>
+                        </div>
+                    <% end %>
                     <h1 class="title is-3">
                         ログイン
                     </h1>
-                    <form action="login_user.php" method="POST">
+                    <form action="login.rb" method="POST">
                         <div class="field">
                             <label class="label">メールアドレス</label>
                             <div class="control">
-                                <input class="input" type="text" name="email">
+                                <input class="input" type="text" name="mail_address">
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">パスワード</label>
                             <div class="control">
-                                <input class="input" type="password" name="pass">
+                                <input class="input" type="password" name="password">
                             </div>
                         </div>
+                        <input type="hidden" name="login">
                         <div class="field">
                             <div class="control">
                                 <input class="button is-link" type="submit" value="Login">
