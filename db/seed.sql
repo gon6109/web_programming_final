@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS states;
 
 CREATE TABLE users
 (
-    id int auto_increment primary key,
+    id integer primary key,
     name varchar(50) not null,
     mail_address varchar(50) not null,
     hashed_password varchar(256) not null
@@ -15,45 +15,45 @@ CREATE TABLE users
 
 CREATE TABLE projects
 (
-    id int auto_increment primary key,
+    id integer primary key,
     name varchar(50) not null,
-    owner_id int not null,
+    user_id integer not null,
     detail text
 );
 
 CREATE TABLE members
 (
-    id int auto_increment primary key,
-    project_id int not null, 
-    user_id int not null
+    id integer primary key,
+    project_id integer not null, 
+    user_id integer not null
 );
 
 CREATE TABLE tasks
 (
-    id int auto_increment primary key,
-    project_id int not null,
+    id integer primary key,
+    project_id integer not null,
     title varchar(10) not null,
     create_date timestamp DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
     update_date timestamp not null DEFAULT (datetime('now', 'localtime')),
     deadline date,
-    user_id int,
-    state_id int,
+    user_id integer,
+    state_id integer,
     detail text
 );
 
 Create TABLE comments
 (
-    id int auto_increment primary key, 
-    task_id int not null,
-    user_id int not null,
+    id integer primary key, 
+    task_id integer not null,
+    user_id integer not null,
     comment text,
     create_date timestamp not null DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE states
 (
-    id int auto_increment primary key,
-    project_id int not null,
+    id integer primary key,
+    project_id integer not null,
     name varchar(20) not null,
-    progress int not null
+    progress integer not null
 );

@@ -6,14 +6,15 @@ require 'bcrypt'
 require 'cgi/session'
 
 require_relative 'model/user'
+require_relative 'model/project'
 
-def print_login_form(cgi, error=nil)
+def print_erb(cgi)
     if !error.nil?
         @error = error
-    end
+    end 
     header = ERB.new(File.read("view/header.rhtml"))
     @header = header.result(binding)
-    body = ERB.new(File.read("view/login.rhtml"))
+    body = ERB.new(File.read("view/register_user.rhtml"))
     @body = body.result(binding)
 
     layout = ERB.new(File.read("view/layout.rhtml"))
@@ -24,34 +25,25 @@ end
 begin
     cgi = CGI.new
     @session = CGI::Session.new(cgi)
-    @session.delete
-    @session = CGI::Session.new(cgi)
 
-    if cgi.params.include?("login")
-        user = User.find_by(mail_address: cgi["mail_address"])
-        
-        if user.nil?
-            print_login_form(cgi, "ユーザ名が正しくありません")
-            @session.close
-            exit
-        end
-
-        password = BCrypt::Password.new(user.hashed_password)
-        if password != cgi["password"]
-            print_login_form(cgi, "パスワードが正しくありません")
-            @session.close
-            exit
-        end
-
-        @session['id'] = user.id
-
-        print cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
+    if @session['id'].nil?
+        print cgi.header({'status' => '302 Found', 'Location' => "login.rb" })
         @session.close
         exit
     end
 
-    print_login_form(cgi)
-    @session.close
+    @current_user = User.find(@session['id'].to_i)
+
+    @projects = Project.where(user: @current_user)
+
+    header = ERB.new(File.read("view/header.rhtml"))
+    @header = header.result(binding)
+    body = ERB.new(File.read("view/projects.rhtml"))
+    @body = body.result(binding)
+
+    layout = ERB.new(File.read("view/layout.rhtml"))
+    print cgi.header("text/html; charset=utf-8")
+    print layout.result(binding)
 
 rescue => e
     print cgi.header("text/html;charset=utf-8")

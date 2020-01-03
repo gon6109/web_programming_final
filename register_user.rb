@@ -66,7 +66,7 @@ begin
 
         @session['id'] = user.id
 
-        print cgi.header({'status' => '302 Found', 'Location' => "menu.rb" })
+        print cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
         @session.close
         exit
     end
