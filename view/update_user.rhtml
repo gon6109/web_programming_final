@@ -1,0 +1,46 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <div class="box">
+                    <% if @error.present? %>
+                        <div class="notification is-danger">
+                            <%= @error %>
+                        </div>
+                    <% end %>
+                    <h1 class="title is-3">
+                        ユーザ設定
+                    </h1>
+                    <form class="content" action="update_user.rb" method="POST">
+                        <div class="field">
+                            <label class="label">名前</label>
+                            <div class="control">
+                                <input class="input" type="text" name="name" value="<%= @current_user.name %>">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">メールアドレス</label>
+                            <div class="control">
+                                <input class="input" type="text" name="mail_address" value="<%= @current_user.mail_address %>">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">パスワード</label>
+                            <div class="control">
+                                <input class="input" type="password" name="password">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">パスワード再入力</label>
+                            <div class="control">
+                                <input class="input" type="password" name="password_confirmation">
+                            </div>
+                        </div>
+                        <input type="hidden" name="update">
+                        <div class="field"><input class="button is-link" type="submit" value="変更"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

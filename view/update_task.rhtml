@@ -3,6 +3,11 @@
         <div class="columns">
             <div class="column is-8 is-offset-2">
                 <div class="box">
+                    <% if @error.present? %>
+                        <div class="notification is-danger">
+                            <%= @error %>
+                        </div>
+                    <% end %>
                     <h1  class="title is-3">タスク編集</h1>
                     <form class="content" action="update_task.rb" method="POST">
                         <div class="field">
