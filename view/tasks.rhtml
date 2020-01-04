@@ -33,10 +33,12 @@
                     <div class="box">
                         <p><%= @current_project.detail.gsub(/\R/, "<br>") %></p>
                     </div>
-                    <form>
-                        <button class="button is-primary" formaction="update_project.rb" formmethod="GET" name="id" value="<%= @current_project.id %>">編集</button>
-                        <button class="button is-danger" formaction="delete_project.rb" formmethod="POST" name="id" value="<%= @current_project.id %>">削除</button>
-                    </form>
+                    <% if @current_project.user == @current_user %>
+                        <form>
+                            <button class="button is-primary" formaction="update_project.rb" formmethod="GET" name="id" value="<%= @current_project.id %>">編集</button>
+                            <button class="button is-danger" formaction="delete_project.rb" formmethod="POST" name="id" value="<%= @current_project.id %>">削除</button>
+                        </form>
+                    <% end %>
                     <form action="tasks.rb" method="GET" class="content">
                         <div class="field">
                             <label class="label">Words</label>

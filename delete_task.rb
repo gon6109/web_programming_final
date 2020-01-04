@@ -37,7 +37,7 @@ begin
 
     id = @task.project.id
 
-    @task.delete
+    @task.destroy
 
     print cgi.header({'status' => '302 Found', 'Location' => "tasks.rb?id=" + id.to_s })
     @session.close
