@@ -1,0 +1,70 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <div class="box">
+                    <% if @error.present? %>
+                        <div class="notification is-danger">
+                            <%= @error %>
+                        </div>
+                    <% end %>
+                    <h1 class="title is-3">プロジェクト更新</h1>
+                    <form class="content" action="update_project.rb" method="POST">
+                        <div class="field">
+                            <label class="label">プロジェクト名</label>
+                            <div class="control">
+                                <input class="input" type="text" name="name" value="<%= @project.name %>">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">メンバー</label>
+                            <div class="control" id="member">
+                                <% i = 0 %>
+                                <% @members.each do |member|%>
+                                    <div class="select"><select class="select_member" name="user_id<%= i %>">
+                                        <option value="0"></option>
+                                        <% @users.each do |user|%>
+                                            <option value="<%= user.id %>" <%= "selected" if member.user == user %>><%= user.name %> </option>
+                                        <% end %>
+                                    </select></div>
+                                    <% i += 1%>
+                                <% end %>
+                                <div class="select"><select class="select_member" name="user_id<%= i %>">
+                                    <option value="0" selected></option>
+                                    <% @users.each do |user|%>
+                                        <option value="<%= user.id %>"><%= user.name%> </option>
+                                    <% end %>
+                                </select></div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">詳細</label>
+                            <div class="control">
+                                <textarea class="textarea" name="detail"><%= @project.detail %></textarea>
+                            </div>
+                        </div>
+                        <input type="hidden" name="update">
+                        <input type="hidden" name="id" value="<%= @project.id %>">
+                        <div class="field">
+                            <div class="control">
+                                <input class="button is-link" type="submit" value="追加">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+i = $('.select_member').length;
+$(document).on("change", '.select_member', function() {
+    if ($(this).val() != 0) {
+        $("#member").append('<div class="select"><select class="select_member" name="user_id' + i + '"><option value="0" selected></option><% @users.each do |user|%><option value="<%= user.id %>"><%= user.name %> </option><% end %></select></div>');
+        i++;
+    }
+    else if ($('.select_member').length > 1) {
+        $(this).parent().remove();
+    }
+});
+</script>
