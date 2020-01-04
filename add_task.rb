@@ -49,7 +49,8 @@ begin
         exit
     end
 
-    @users = User.all
+    @users = User.eager_load(:members)
+    @users = @users.where(id: @current_project.user.id).or(@users.where(members: { project: @current_project }))
 
     if cgi.params.include?("add")
 
