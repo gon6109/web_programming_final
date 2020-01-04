@@ -36,6 +36,15 @@ begin
         exit
     end
 
+    if @cgi.params.include?("add_comment")
+        comment = Comment.new
+        comment.user = @current_user
+        comment.task = @task
+        comment.comment = @cgi["comment"]
+
+        comment.save
+    end
+
     @comments = Comment.where(task: @task)
 
     header = ERB.new(File.read("view/header.rhtml"))

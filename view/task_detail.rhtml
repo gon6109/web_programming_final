@@ -58,14 +58,15 @@
                                 <p><%= comment.comment %></p>
                             </div>
                         <% end %>
-                    <form action="add_comment.rb" method="POST">
+                    <form action="task_detail.rb?id=<%= @task.id %>" method="POST">
                         <div class="field">
                             <label class="label">新規コメント</label>
                             <div class="control">
                                 <textarea name="comment" class="textarea"></textarea>
                             </div>
                         </div>
-                        <input type="hidden" name="task_id" value="<%= @task.id %>">
+                        <input type="hidden" name="add_comment">
+                        <input type="hidden" name="id" value="<%= @task.id %>">
                         <div class="field">
                             <input  class="button is-link" type="submit" value="追加">
                         </div>
