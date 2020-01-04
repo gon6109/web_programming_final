@@ -1,0 +1,77 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <span class="tag is-info is-large"></span>
+                <div class="box">
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <h1 class="title is-3"><%= @task.title %></h1>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <h2 class="subtitle is-3"><%= @task.user&.name %></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <h2 class="title is-4">締め切り</h2>
+                            </div>
+                            <div class="level-item">
+                                <p><%= @task.deadline %></p>
+                            </div>
+                            <div class="level-item">
+                                <h2 class="title is-4">進捗</h2>
+                            </div>
+                            <div class="level-item">
+                                <p>10</p>
+                            </div>
+                        </div>
+                    </div>
+                    <progress class="progress is-success" value="10"
+                        max="100">10%</progress>
+                    <h2 class="title is-4">詳細</h2>
+                    <div class="box"><p><%= @task.detail %></p></div>
+                    <form>
+                        <button class="button is-primary" formaction="update_task.rb" formmethod="GET" name="id" value="<%= @task.id %>">編集</button>
+                        <button class="button is-danger" formaction="delete_task.rb" formmethod="POST" name="id" value="<%= @task.id %>">削除</button>
+                    </form>
+                </div>
+                <div class="box">
+                    <h2 class="title is-4">コメント</h2>
+                        <% @comments.each do |comment| %>
+                            <div class="box">
+                                <div class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <h3 class="title is-4"> <%= comment.user.name %></h3>
+                                        </div>
+                                        <div class="level-item">
+                                            <h4 class="subtitle is-4"><%= comment.create_date %></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p><%= comment.comment %></p>
+                            </div>
+                        <% end %>
+                    <form action="add_comment.rb" method="POST">
+                        <div class="field">
+                            <label class="label">新規コメント</label>
+                            <div class="control">
+                                <textarea name="comment" class="textarea"></textarea>
+                            </div>
+                        </div>
+                        <input type="hidden" name="task_id" value="<%= @task.id %>">
+                        <div class="field">
+                            <input  class="button is-link" type="submit" value="追加">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
