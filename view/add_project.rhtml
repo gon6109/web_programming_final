@@ -17,6 +17,17 @@
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">メンバー</label>
+                            <div class="control" id="member">
+                                <div class="select"><select class="select_member" name="user_id0">
+                                    <option value="0" selected></option>
+                                    <% @users.each do |user|%>
+                                        <option value="<%= user.id %>"><%= user.name%> </option>
+                                    <% end %>
+                                </select></div>
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label">詳細</label>
                             <div class="control">
                                 <textarea class="textarea" name="detail"></textarea>
@@ -34,3 +45,15 @@
         </div>
     </div>
 </section>
+<script>
+i = 1;
+$(document).on("change", '.select_member', function() {
+    if ($(this).val() != 0) {
+        $("#member").append('<div class="select"><select class="select_member" name="user_id' + i + '"><option value="0" selected></option><% @users.each do |user|%><option value="<%= user.id %>"><%= user.name %> </option><% end %></select></div>');
+        i++;
+    }
+    else if ($('.select_member').length > 1) {
+        $(this).parent().remove();
+    }
+});
+</script>

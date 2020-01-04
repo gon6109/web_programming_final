@@ -7,6 +7,7 @@ require 'cgi/session'
 
 require_relative 'model/user'
 require_relative 'model/project'
+require_relative 'model/member'
 
 begin
     cgi = CGI.new
@@ -19,8 +20,9 @@ begin
     end
 
     @current_user = User.find(@session['id'].to_i)
-
-    @projects = Project.where(user: @current_user)
+    
+    @projects = Project.eager_load(:members)
+    @projects = @projects.where(user: @current_user).or(@projects.merge(Member.where(user: @current_user)))
 
     header = ERB.new(File.read("view/header.rhtml"))
     @header = header.result(binding)

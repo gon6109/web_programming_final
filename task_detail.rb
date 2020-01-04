@@ -9,6 +9,7 @@ require_relative 'model/user'
 require_relative 'model/project'
 require_relative 'model/task'
 require_relative 'model/comment'
+require_relative 'model/member'
 
 begin
     @cgi = CGI.new
@@ -29,7 +30,7 @@ begin
         exit
     end
 
-    if @current_user != @task.project.user
+    if @current_user != @task.project.user && !Member.where(user: @current_user).where(project: @task.project).exists?
         print @cgi.header({'status' => '302 Found', 'Location' => "tasks.rb?id=" + @task.project.id.to_s })
         @session.close
         exit

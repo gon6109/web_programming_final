@@ -7,6 +7,7 @@ require 'cgi/session'
 
 require_relative 'model/user'
 require_relative 'model/project'
+require_relative 'model/member'
 
 def print_add_project_form(cgi, error=nil)
     if !error.nil?
@@ -34,6 +35,8 @@ begin
 
     @current_user = User.find(@session['id'].to_i)
 
+    @users = User.where.not(id: @current_user.id)
+
     if cgi.params.include?("add")
 
         if cgi["name"] == ""
@@ -41,11 +44,23 @@ begin
             @session.close
             exit
         end
-
+        
         project = Project.new
         project.name = cgi["name"]
         project.user = @current_user
         project.detail = cgi["detail"]
+        
+        cgi.params.select{ |k, v| k.include?("user_id")}.map{ |k, v| v[0]}.each do |item|
+            next if item == "0" || Member.where(project: project).where(user: User.find(item.to_i)).exists?
+            member = Member.new
+            member.project = project
+            member.user = User.find(item.to_i)
+            if !member.save
+                print_add_project_form(cgi, "データベースに保存できませんでした")
+                @session.close
+                exit
+            end
+        end
         
         if !project.save
             print_add_project_form(cgi, "データベースに保存できませんでした")

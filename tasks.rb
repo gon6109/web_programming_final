@@ -8,6 +8,7 @@ require 'cgi/session'
 require_relative 'model/user'
 require_relative 'model/project'
 require_relative 'model/task'
+require_relative 'model/member'
 
 begin
     @cgi = CGI.new
@@ -28,13 +29,15 @@ begin
         exit
     end
 
-    if @current_user != @current_project.user
+    if @current_user != @current_project.user && !Member.where(user: @current_user).where(project: @current_project).exists?
         print @cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
         @session.close
         exit
     end
 
     @tasks = Task.eager_load(:user).where(project: @current_project)
+
+    @members = Member.where(project: @current_project)
 
     if @cgi.params.include?("search")
         words = @cgi["word"].split(/\s/)

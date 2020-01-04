@@ -8,6 +8,7 @@ require 'cgi/session'
 require_relative 'model/user'
 require_relative 'model/project'
 require_relative 'model/task'
+require_relative 'model/member'
 
 def print_add_task_form(cgi, error=nil)
     if !error.nil?
@@ -42,7 +43,7 @@ begin
         exit
     end
 
-    if @current_user != @current_project.user
+    if @current_user != @current_project.user && !Member.where(user: @current_user).where(project: @current_project).exists?
         print cgi.header({'status' => '302 Found', 'Location' => "projects.rb" })
         @session.close
         exit

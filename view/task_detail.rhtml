@@ -35,7 +35,7 @@
                     <progress class="progress is-success" value="10"
                         max="100">10%</progress>
                     <h2 class="title is-4">詳細</h2>
-                    <div class="box"><p><%= @task.detail %></p></div>
+                    <div class="box"><p><%= @task.detail.gsub(/\R/, "<br>") %></p></div>
                     <form>
                         <button class="button is-primary" formaction="update_task.rb" formmethod="GET" name="id" value="<%= @task.id %>">編集</button>
                         <button class="button is-danger" formaction="delete_task.rb" formmethod="POST" name="id" value="<%= @task.id %>">削除</button>

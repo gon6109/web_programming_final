@@ -4,7 +4,7 @@
     </div>
     <div class="navbar-menu">
         <div class="navbar-start">
-            <a href="menu.php" class="navbar-item">メニュー</a>
+            <a href="projects.rb" class="navbar-item">プロジェクト</a>
         </div>
         <div class="navbar-end">
             <% if @session.nil? || @session['id'].nil? %>
@@ -13,7 +13,7 @@
                 <div class="navbar-item">
                     <%= User.find(@session['id']).name %>
                 </div>
-                <a href="update_user_form.php" class="navbar-item">ユーザ設定</a>
+                <a href="update_user.rb" class="navbar-item">ユーザ設定</a>
             <% end %>
         </div>
     </div>
