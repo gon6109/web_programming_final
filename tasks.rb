@@ -34,12 +34,13 @@ begin
         exit
     end
 
-    @tasks = Task.joins(:user).where(project: @current_project)
+    @tasks = Task.eager_load(:user).where(project: @current_project)
 
     if @cgi.params.include?("search")
-        words = @cgi.params["word"]
+        words = @cgi["word"].split(/\s/)
         words.each do |word|
-            @tasks = @tasks.where("title like ? or detail like ? or users.name like ?", '%' + word + '%', '%' + word + '%', '%' + word + '%')
+            @tasks = @tasks.where("title like ? or detail like ? ", '%' + word + '%', '%' + word + '%')
+            .or(@tasks.merge(User.where("name like ?",  '%' + word + '%')))
         end
     end
 
@@ -51,6 +52,7 @@ begin
     layout = ERB.new(File.read("view/layout.rhtml"))
     print @cgi.header("text/html; charset=utf-8")
     print layout.result(binding)
+
     @session.close
 
 rescue => e
