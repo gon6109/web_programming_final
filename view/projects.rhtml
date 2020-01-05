@@ -21,6 +21,8 @@
                                 <th>ID</th>
                                 <th>プロジェクト名</th>
                                 <th>管理者</th>
+                                <th>未完了タスク/総タスク</th>
+                                <th>進捗</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,6 +31,8 @@
                                     <th><%= project.id %></th>
                                     <td><a href="tasks.rb?id=<%= project.id %>"><%= project.name %></a></td>
                                     <td><%= project.user.name %></td>
+                                    <td><%= project.not_finish_task_count %> / <%= project.task_count %></td>
+                                    <td><%= project.task_progress_average %></td>
                                 </tr>
                             <% end %>
                         </tbody>

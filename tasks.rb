@@ -44,7 +44,8 @@ begin
         words = @cgi["word"].split(/\s/)
         words.each do |word|
             @tasks = @tasks.where("title like ? or detail like ? ", '%' + word + '%', '%' + word + '%')
-            .or(@tasks.merge(User.where("users.name like ?",  '%' + word + '%')))
+            .or(@tasks.merge(User.where("users.name like ?", '%' + word + '%')))
+            .or(@tasks.merge(State.where("states.name like ?", '%' + word + '%')))
         end
         if @cgi["finish"] != "on"
             @tasks = @tasks.merge(State.where.not(progress: 100))
