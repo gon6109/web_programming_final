@@ -8,6 +8,7 @@ require 'cgi/session'
 require_relative 'model/user'
 require_relative 'model/project'
 require_relative 'model/member'
+require_relative 'model/state'
 
 def print_add_project_form(cgi, error=nil)
     if !error.nil?
@@ -56,6 +57,19 @@ begin
             member.project = project
             member.user = User.find(item.to_i)
             if !member.save
+                print_add_project_form(cgi, "データベースに保存できませんでした")
+                @session.close
+                exit
+            end
+        end
+
+        cgi.params.select{ |k, v| k.include?("state_name")}.map{ |k, v| [v[0], cgi["state_progress" + k.gsub(/state_name/, "")]]}.each do |name, progress|
+            next if name == "" || State.where(name: name).where(project: project).exists?
+            state = State.new
+            state.project = project
+            state.name = name
+            state.progress = progress.to_i
+            if !state.save
                 print_add_project_form(cgi, "データベースに保存できませんでした")
                 @session.close
                 exit

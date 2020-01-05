@@ -9,6 +9,7 @@ require_relative 'model/user'
 require_relative 'model/project'
 require_relative 'model/task'
 require_relative 'model/member'
+require_relative 'model/state'
 
 def print_update_project_form(cgi, error=nil)
     if !error.nil?
@@ -44,6 +45,8 @@ begin
     end
 
     @members = Member.where(project: @project)
+
+    @states = State.where(project: @project)
 
     if @current_user != @project.user
         print cgi.header({'status' => '302 Found', 'Location' => "tasks.rb?id=" + @task.project.id.to_s })
@@ -81,9 +84,38 @@ begin
                 @session.close
                 exit
             end
+            before_member = before_member.where.not(id: member.id)
         end
 
         before_member.destroy_all
+
+        before_state = State.where(project: @project)
+        cgi.params.select{ |k, v| k.include?("state_name")}.map{ |k, v| [v[0], cgi["state_progress" + k.gsub(/state_name/, "")]]}.each do |name, progress|
+            next if name == ""
+            temp = State.find_by(name: name, project: @project)
+            if !temp.nil?
+                temp.progress = progress.to_i
+                if !temp.save
+                    print_add_project_form(cgi, "データベースに保存できませんでした")
+                    @session.close
+                    exit
+                end
+                before_state = before_state.where.not(id: temp.id)
+                next
+            end
+            state = State.new
+            state.name = name
+            state.progress = progress.to_i
+            state.project = @project
+            if !state.save
+                print_add_project_form(cgi, "データベースに保存できませんでした")
+                @session.close
+                exit
+            end
+            before_state = before_state.where.not(id: state.id)
+        end
+
+        before_state.destroy_all
         
         if !@project.save
             print_add_project_form(cgi, "データベースに保存できませんでした")
