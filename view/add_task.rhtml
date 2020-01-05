@@ -28,7 +28,18 @@
                                 <div class="select"><select name="user_id">
                                     <option value="0" selected></option>
                                     <% @users.each do |user|%>
-                                        <option value="<%= user.id %>"><%= user.name%> </option>
+                                        <option value="<%= user.id %>"><%= user.name %> </option>
+                                    <% end %>
+                                </select></div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">ステータス</label>
+                            <div class="control">
+                                <div class="select"><select name="state">
+                                    <option value="0" selected></option>
+                                    <% @states.each do |state|%>
+                                        <option value="<%= state.id %>"><%= state.name %> </option>
                                     <% end %>
                                 </select></div>
                             </div>

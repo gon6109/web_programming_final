@@ -17,12 +17,6 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">進捗</label>
-                            <div class="control">
-                                <input class="input" type="number" name="progress" value="<?php echo GetProgress($_GET['id']);?>">
-                            </div>
-                        </div>
-                        <div class="field">
                             <label class="label">締め切り</label>
                             <div class="control">
                                 <input class="input" type="date" name="deadline" value="<?php echo GetDeadline($_GET['id']);?>">
@@ -42,7 +36,12 @@
                         <div class="field">
                             <label class="label">ステータス</label>
                             <div class="control">
-                                <div class="select"><select name="status_id"></select></div>
+                                <div class="select"><select name="state">
+                                    <option value="0" selected></option>
+                                    <% @states.each do |state|%>
+                                        <option value="<%= state.id %>" <%= "selected" if state == @task.state %>><%= state.name%> </option>
+                                    <% end %>
+                                </select></div>
                             </div>
                         </div>
                         <div class="field">

@@ -9,6 +9,7 @@ require_relative 'model/user'
 require_relative 'model/project'
 require_relative 'model/task'
 require_relative 'model/member'
+require_relative 'model/state'
 
 def print_update_task_form(cgi, error=nil)
     if !error.nil?
@@ -52,6 +53,8 @@ begin
     @users = User.eager_load(:members)
     @users = @users.where(id: @task.project.user.id).or(@users.where(members: { project: @task.project }))
 
+    @states = State.where(project: @task.project)
+
     if cgi.params.include?("update")
 
         if cgi["title"] == ""
@@ -63,6 +66,7 @@ begin
         @task.title = cgi["title"]
         @task.deadline = cgi["deadline"]
         @task.user = User.find_by(id:cgi["user_id"].to_i)
+        @task.state = State.find_by(id:cgi["state"].to_i)
         @task.detail = cgi["detail"]
         
         if !@task.save

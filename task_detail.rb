@@ -10,6 +10,7 @@ require_relative 'model/project'
 require_relative 'model/task'
 require_relative 'model/comment'
 require_relative 'model/member'
+require_relative 'model/state'
 
 begin
     @cgi = CGI.new
