@@ -9,6 +9,7 @@ require_relative 'model/user'
 require_relative 'model/project'
 require_relative 'model/task'
 require_relative 'model/member'
+require_relative 'model/state'
 
 begin
     @cgi = CGI.new
@@ -35,7 +36,7 @@ begin
         exit
     end
 
-    @tasks = Task.eager_load(:user).where(project: @current_project)
+    @tasks = Task.eager_load(:user).eager_load(:state).where(project: @current_project)
 
     @members = Member.where(project: @current_project)
 
@@ -43,8 +44,13 @@ begin
         words = @cgi["word"].split(/\s/)
         words.each do |word|
             @tasks = @tasks.where("title like ? or detail like ? ", '%' + word + '%', '%' + word + '%')
-            .or(@tasks.merge(User.where("name like ?",  '%' + word + '%')))
+            .or(@tasks.merge(User.where("users.name like ?",  '%' + word + '%')))
         end
+        if @cgi["finish"] != "on"
+            @tasks = @tasks.merge(State.where.not(progress: 100))
+        end
+    else
+        @tasks = @tasks.merge(State.where.not(progress: 100))
     end
 
     header = ERB.new(File.read("view/header.rhtml"))

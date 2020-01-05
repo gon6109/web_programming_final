@@ -44,6 +44,14 @@
                             <label class="label">Words</label>
                             <div class="control"><input type="text" placeholder="自由ワード検索 スペースでand検索" name="word" class="input" value='<%= @cgi["word"] %>'></div>
                         </div>
+                        <div class="field">
+                            <div class="control">
+                                <label class="checkbox">
+                                <input type="checkbox" name="finish" <%= "checked" if @cgi["finish"] == "on" %>>
+                                    達成済み表示
+                                </label>
+                            </div>
+                        </div>
                         <input type="hidden" name="id" value="<%= @current_project.id %>">
                         <input type="hidden" name="search">
                         <div class="field">
@@ -57,7 +65,8 @@
                                 <th>タスク名</th>
                                 <th>締め切り</th>
                                 <th>担当者</th>
-                                <th>更新日</th>
+                                <th>ステータス</th>
+                                <th>進捗</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,7 +76,8 @@
                                     <td><a href="task_detail.rb?id=<%= task.id %>"><%= task.title %></a></td>
                                     <td><%= task.deadline %></td>
                                     <td><%= task.user&.name %></td>
-                                    <td><%= task.update_date %></td>
+                                    <td><%= task.state&.name %></td>
+                                    <td><%= task.state&.progress || 0 %></td>
                                 </tr>
                             <% end %>
                         </tbody>
